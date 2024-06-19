@@ -10,26 +10,36 @@ import WebKit
 import SnapKit
 
 class ViewController: UIViewController, WKNavigationDelegate {
-    
+    //MARK: - Variables
     weak var loadingDelegate: PageLoading?
     var domainName: String = ""
-    
+    var urlToOpen: URLs = .base
+    var startTime: Date?
+    //MARK: - Outlets
     lazy var webView: WKWebView = {
         let webView = WKWebView()
         webView.navigationDelegate = self
         return webView
     }()
-    
-    var urlToOpen: URLs = .base
-    var startTime: Date?
-    
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setViews()
         setConstraints()
+        setNavAppearance()
         setWebView(url: urlToOpen)
         domainName = urlToOpen.domain
+    }
+    //MARK: - Setup
+    private func setNavAppearance() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
     }
     
     private func setViews() {
@@ -41,7 +51,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    
+    //MARK: - WebView
     func setWebView(url: URLs) {
         guard let url = URL(string: url.rawValue) else { return }
         let request = URLRequest(url: url)
@@ -59,7 +69,5 @@ class ViewController: UIViewController, WKNavigationDelegate {
         self.navigationItem.title = String(format: "Время загрузки: %.2f секунд", loadingTime)
         loadingDelegate?.didFinishLoading(page: domainName, loadingTime: loadingTime)
     }
-
-
 }
 

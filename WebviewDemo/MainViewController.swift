@@ -63,6 +63,7 @@ class MainViewController: UIViewController {
         tv.delegate = self
         tv.dataSource = self
         tv.register(PageLoadingTableViewCell.self, forCellReuseIdentifier: "pageloadCell")
+        tv.backgroundColor = .white
         return tv
     }()
     //MARK: - Lifecycle
@@ -90,7 +91,7 @@ class MainViewController: UIViewController {
         }
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(24)
-            make.horizontalEdges.equalToSuperview().inset(16)
+            make.horizontalEdges.equalToSuperview()
             make.height.equalTo(68)
         }
         NSLayoutConstraint.activate([
@@ -108,7 +109,6 @@ class MainViewController: UIViewController {
         }
     }
     //MARK: - Button actions
-    
     @objc func generalButtonAction(_ sender: UIButton) {
         let buttonIndex = sender.tag
         let buttonTitle = buttonArray[buttonIndex]
@@ -184,7 +184,7 @@ class MainViewController: UIViewController {
         }
     }
 }
-
+//MARK: - PageLoading delegate
 extension MainViewController: PageLoading {
     func didFinishLoading(page: String, loadingTime: TimeInterval) {
         let marketplaceName = page
@@ -195,7 +195,7 @@ extension MainViewController: PageLoading {
     
     
 }
-
+//MARK: - UITableViewDelegate & UITableViewDataSource
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -210,7 +210,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
 }
 
 
